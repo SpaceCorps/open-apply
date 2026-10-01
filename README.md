@@ -46,7 +46,7 @@ Tagged releases attach `open-apply-<tag>-<target>` archives built by [`release.y
 | Linux | aarch64 musl (`aarch64-unknown-linux-musl`) |
 | Windows | x64 MSVC (`x86_64-pc-windows-msvc`) |
 
-No release has been cut yet, so build from source for now.
+The latest build is [v0.1.0](https://github.com/SpaceCorps/open-apply/releases/tag/v0.1.0), a pre-release: the interface may still change before 1.0. Download the archive for your platform from the [releases page](https://github.com/SpaceCorps/open-apply/releases/latest), unpack it and put `open-apply` on your `PATH`.
 
 ### Use it from Claude Code
 
