@@ -1,0 +1,52 @@
+{
+  "apiVersion": "1",
+  "jobs": [
+    {
+      "id": "11111111-2222-3333-4444-555555555555",
+      "title": "Staff Backend Engineer",
+      "department": "Engineering",
+      "team": "Platform",
+      "employmentType": "FullTime",
+      "location": "Berlin, Germany",
+      "secondaryLocations": [],
+      "publishedAt": "2026-09-10T10:00:00.000+02:00",
+      "isListed": true,
+      "isRemote": true,
+      "workplaceType": "Remote",
+      "jobUrl": "https://jobs.ashbyhq.com/acme/11111111-2222-3333-4444-555555555555",
+      "applyUrl": "https://jobs.ashbyhq.com/acme/11111111-2222-3333-4444-555555555555/application",
+      "descriptionHtml": "<p>We ship reliable systems.</p>",
+      "descriptionPlain": "We ship reliable systems for thousands of teams."
+    },
+    {
+      "id": "66666666-7777-8888-9999-000000000000",
+      "title": "Office Manager",
+      "department": "Operations",
+      "team": "People",
+      "employmentType": "FullTime",
+      "location": "Berlin, Germany",
+      "secondaryLocations": [],
+      "publishedAt": "2026-08-01T10:00:00.000+02:00",
+      "isListed": true,
+      "isRemote": false,
+      "workplaceType": "OnSite",
+      "jobUrl": "https://jobs.ashbyhq.com/acme/66666666-7777-8888-9999-000000000000",
+      "applyUrl": "https://jobs.ashbyhq.com/acme/66666666-7777-8888-9999-000000000000/application",
+      "descriptionHtml": "<p>Keep the office running.</p>",
+      "descriptionPlain": "Keep the office running."
+    },
+    {
+      "id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "title": "Unlisted Role",
+      "department": "Engineering",
+      "team": "Secret",
+      "employmentType": "FullTime",
+      "location": "Remote",
+      "publishedAt": "2026-07-01T10:00:00.000+02:00",
+      "isListed": false,
+      "isRemote": true,
+      "jobUrl": "https://jobs.ashbyhq.com/acme/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "descriptionPlain": "Not public."
+    }
+  ]
+}

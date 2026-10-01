@@ -1,0 +1,30 @@
+{
+  "data": [
+    {
+      "slug": "rust-developer-acme-berlin-123",
+      "company_name": "Acme GmbH",
+      "title": "Rust Developer",
+      "description": "<p>Build the next generation of sync.</p>",
+      "remote": false,
+      "url": "https://www.arbeitnow.com/jobs/companies/acme-gmbh/rust-developer-acme-berlin-123",
+      "tags": ["Engineering"],
+      "job_types": ["full time"],
+      "location": "Berlin",
+      "created_at": 1789732800
+    },
+    {
+      "slug": "remote-support-globex-456",
+      "company_name": "Globex",
+      "title": "Remote Support Specialist",
+      "description": "<p>Answer customer questions.</p>",
+      "remote": true,
+      "url": "https://www.arbeitnow.com/jobs/companies/globex/remote-support-globex-456",
+      "tags": ["Support"],
+      "job_types": ["contract"],
+      "location": "Munich",
+      "created_at": 1789459200
+    }
+  ],
+  "links": { "first": "https://www.arbeitnow.com/api/job-board-api?page=1", "next": null },
+  "meta": { "current_page": 1 }
+}

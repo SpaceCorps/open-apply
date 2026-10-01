@@ -1,0 +1,40 @@
+[
+  {
+    "id": "0f1e2d3c-aaaa-bbbb-cccc-1234567890ab",
+    "text": "Platform Engineer",
+    "categories": {
+      "commitment": "Full-time",
+      "department": "Engineering",
+      "location": "Remote - US",
+      "team": "Platform",
+      "allLocations": ["Remote - US", "Toronto"]
+    },
+    "country": "US",
+    "workplaceType": "remote",
+    "description": "<div>Build the deploy pipeline.</div>",
+    "descriptionPlain": "Build the deploy pipeline and keep it fast.",
+    "lists": [
+      { "text": "What you will need", "content": "<li>Kubernetes experience</li><li>Go or Rust</li>" }
+    ],
+    "additional": "<div>We are an equal opportunity employer.</div>",
+    "additionalPlain": "We are an equal opportunity employer.",
+    "hostedUrl": "https://jobs.lever.co/acme/0f1e2d3c-aaaa-bbbb-cccc-1234567890ab",
+    "applyUrl": "https://jobs.lever.co/acme/0f1e2d3c-aaaa-bbbb-cccc-1234567890ab/apply",
+    "createdAt": 1789459200000
+  },
+  {
+    "id": "9a8b7c6d-0000-1111-2222-abcdefabcdef",
+    "text": "Support Engineer",
+    "categories": { "commitment": "Full-time", "department": "Customer", "location": "Toronto", "team": "Support" },
+    "country": "CA",
+    "workplaceType": "on-site",
+    "description": "<div>Help customers succeed.</div>",
+    "descriptionPlain": "Help customers succeed.",
+    "lists": [],
+    "additional": "",
+    "additionalPlain": "",
+    "hostedUrl": "https://jobs.lever.co/acme/9a8b7c6d-0000-1111-2222-abcdefabcdef",
+    "applyUrl": "https://jobs.lever.co/acme/9a8b7c6d-0000-1111-2222-abcdefabcdef/apply",
+    "createdAt": 1789000000000
+  }
+]

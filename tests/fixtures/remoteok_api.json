@@ -1,0 +1,31 @@
+[
+  { "last_updated": 1790071200, "legal": "https://remoteok.com/legal" },
+  {
+    "slug": "remote-senior-rust-engineer-acme-1234",
+    "id": "1234",
+    "epoch": 1790071200,
+    "date": "2026-09-22T10:00:00+00:00",
+    "company": "Acme",
+    "company_logo": "",
+    "position": "Senior Rust Engineer",
+    "tags": ["rust", "backend"],
+    "description": "<p>Work on a <b>distributed</b> queue.</p><ul><li>Rust</li></ul>",
+    "location": "Worldwide",
+    "salary_min": 120000,
+    "salary_max": 160000,
+    "apply_url": "https://remoteOK.com/l/1234",
+    "url": "https://remoteOK.com/remote-jobs/remote-senior-rust-engineer-acme-1234"
+  },
+  {
+    "slug": "remote-support-agent-globex-5678",
+    "id": "5678",
+    "epoch": 1789905600,
+    "date": "2026-09-20T12:00:00+00:00",
+    "company": "Globex",
+    "position": "Support Agent",
+    "tags": ["support"],
+    "description": "<p>Answer tickets.</p>",
+    "location": "",
+    "url": "https://remoteOK.com/remote-jobs/remote-support-agent-globex-5678"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "jobs": [
+    {
+      "absolute_url": "https://job-boards.greenhouse.io/acme-labs/jobs/4012345",
+      "id": 4012345,
+      "internal_job_id": 3300001,
+      "title": "Senior Rust Engineer",
+      "updated_at": "2026-09-18T11:30:00-04:00",
+      "first_published": "2026-09-01T05:00:00-04:00",
+      "requisition_id": "ENG-101",
+      "location": { "name": "Remote - Europe" },
+      "metadata": null,
+      "content": "&lt;p&gt;Acme Labs builds local-first sync software.&lt;/p&gt;&lt;h3&gt;What you will do&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;Design the sync engine&lt;/li&gt;&lt;li&gt;Review &amp;amp; mentor&lt;/li&gt;&lt;/ul&gt;",
+      "departments": [{ "id": 1, "name": "Engineering" }],
+      "offices": []
+    },
+    {
+      "absolute_url": "https://job-boards.greenhouse.io/acme-labs/jobs/4012399",
+      "id": 4012399,
+      "internal_job_id": 3300002,
+      "title": "Product Designer",
+      "updated_at": "2026-09-10T08:00:00-04:00",
+      "first_published": "2026-08-20T05:00:00-04:00",
+      "requisition_id": "DES-7",
+      "location": { "name": "Berlin" },
+      "metadata": null,
+      "content": "&lt;p&gt;Shape how people use Acme.&lt;/p&gt;",
+      "departments": [{ "id": 2, "name": "Design" }],
+      "offices": []
+    }
+  ],
+  "meta": { "total": 2 }
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>We Work Remotely: Remote jobs in Programming</title>
+    <link>https://weworkremotely.com/</link>
+    <description>Remote programming jobs</description>
+    <item>
+      <title>Acme: Senior Rust Engineer</title>
+      <region>Anywhere in the World</region>
+      <country></country>
+      <state></state>
+      <skills>Rust, Backend</skills>
+      <category>Back-End Programming</category>
+      <type>Full-Time</type>
+      <description><![CDATA[<p>Join our small team building a <b>sync engine</b>.</p><ul><li>Rust</li></ul>]]></description>
+      <pubDate>Tue, 22 Sep 2026 10:00:00 +0000</pubDate>
+      <expires_at>Thu, 22 Oct 2026 10:00:00 +0000</expires_at>
+      <guid>https://weworkremotely.com/remote-jobs/acme-senior-rust-engineer</guid>
+      <link>https://weworkremotely.com/remote-jobs/acme-senior-rust-engineer</link>
+    </item>
+    <item>
+      <title>Globex &amp; Sons: Support Engineer</title>
+      <region>Europe Only</region>
+      <country>Finland</country>
+      <category>Customer Support</category>
+      <type>Contract</type>
+      <description><![CDATA[<p>Help customers.</p>]]></description>
+      <pubDate>Sun, 20 Sep 2026 12:00:00 +0000</pubDate>
+      <guid>https://weworkremotely.com/remote-jobs/globex-support-engineer</guid>
+      <link>https://weworkremotely.com/remote-jobs/globex-support-engineer</link>
+    </item>
+  </channel>
+</rss>
