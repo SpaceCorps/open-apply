@@ -201,7 +201,7 @@ pub fn materials_value(job: &Job, profile: &Profile) -> Value {
     let cv = crate::guardrails::resolve_cv(job, profile);
     json!({
         "cv": cv,
-        "cv_exists": cv.as_deref().map(|p| std::path::Path::new(p).is_file()),
+        "cv_exists": cv.as_deref().is_some_and(|p| std::path::Path::new(p).is_file()),
         "cover_letter": job.cover_path,
     })
 }

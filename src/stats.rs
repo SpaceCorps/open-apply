@@ -56,7 +56,8 @@ pub fn compute(jobs: &[Job], events: &[Event], since: Option<&str>) -> Value {
     let mut days: Vec<f64> = Vec::new();
     let mut by_source: BTreeMap<String, Acc> = BTreeMap::new();
     let mut by_via: BTreeMap<String, Acc> = BTreeMap::new();
-    let mut reached: BTreeMap<&str, u32> =
+    // Pipeline order, so the output reads top to bottom like the funnel it describes.
+    let mut reached: Vec<(&str, u32)> =
         ["acknowledged", "screening", "assessment", "interview", "offer"].iter().map(|k| (*k, 0)).collect();
 
     for j in &kept {
@@ -79,8 +80,10 @@ pub fn compute(jobs: &[Job], events: &[Event], since: Option<&str>) -> Value {
             (EventType::Interview, "interview"),
             (EventType::Offer, "offer"),
         ] {
-            if evs.iter().any(|e| e.kind == ty && e.at.as_str() >= applied_at) {
-                *reached.entry(key).or_default() += 1;
+            if evs.iter().any(|e| e.kind == ty && e.at.as_str() >= applied_at)
+                && let Some(slot) = reached.iter_mut().find(|(k, _)| *k == key)
+            {
+                slot.1 += 1;
             }
         }
         let src = by_source.entry(source_kind(&j.source).to_string()).or_insert(Acc { applied: 0, responded: 0 });
@@ -101,7 +104,7 @@ pub fn compute(jobs: &[Job], events: &[Event], since: Option<&str>) -> Value {
         "responded": responded,
         "response_rate": rate(responded, applied_total),
         "median_days_to_first_response": median(&mut days).map(round1),
-        "ever_reached": reached,
+        "ever_reached": Value::Object(reached.iter().map(|(k, n)| ((*k).to_string(), json!(n))).collect()),
         "by_source": breakdown(&by_source),
         "by_via": breakdown(&by_via),
     })

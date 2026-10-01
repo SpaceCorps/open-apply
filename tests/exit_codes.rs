@@ -148,3 +148,24 @@ fn error_envelope_shape_json_and_yaml() {
     assert!(text.contains("\n  hint: "));
     assert!(out.stdout.is_empty());
 }
+
+#[test]
+fn a_server_that_never_answers_times_out_as_a_network_error() {
+    // Accepts connections and then says nothing.
+    let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+    let url = format!("http://127.0.0.1:{}", listener.local_addr().unwrap().port());
+    std::thread::spawn(move || {
+        let mut held = Vec::new();
+        for stream in listener.incoming().flatten() {
+            held.push(stream);
+        }
+    });
+    let mut env = Env::new();
+    env.mock_url = url;
+    env.init();
+    env.write_config("http_timeout_secs: 1\n");
+    let started = std::time::Instant::now();
+    let err = env.fails(5, &["search", "--source", "arbeitnow"]);
+    assert_eq!(err["error"]["code"], "network");
+    assert!(started.elapsed() < std::time::Duration::from_secs(10), "the configured timeout must apply");
+}

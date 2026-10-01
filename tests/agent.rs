@@ -261,3 +261,16 @@ fn empty_queue_says_how_to_fill_it() {
     assert_eq!(v["count"], 0);
     assert!(v["hint"].as_str().unwrap().contains("search --save"));
 }
+
+#[test]
+fn init_takes_a_home_flag_that_beats_the_environment() {
+    let env = Env::new(); // OPEN_APPLY_HOME points at env.home
+    let elsewhere = env.dir.path().join("elsewhere");
+    let out = env.cmd().args(["--json", "init", "--home", elsewhere.to_str().unwrap()]).output().unwrap();
+    assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
+    assert!(elsewhere.join("open-apply.db").exists());
+    assert!(!env.home.exists(), "the environment variable must not have been used");
+    // Other commands take the flag too.
+    let out = env.cmd().args(["--json", "--home", elsewhere.to_str().unwrap(), "job", "list"]).output().unwrap();
+    assert!(out.status.success());
+}

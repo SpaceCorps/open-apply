@@ -337,6 +337,22 @@ mod tests {
     }
 
     #[test]
+    fn politeness_delay_spaces_requests_to_one_host_only() {
+        let http = Http {
+            agent: ureq::Agent::new_with_defaults(),
+            delay: Duration::from_millis(150),
+            last: Mutex::new(HashMap::new()),
+        };
+        let start = Instant::now();
+        http.be_polite("a.example");
+        assert!(start.elapsed() < Duration::from_millis(100), "the first request to a host is not delayed");
+        http.be_polite("b.example");
+        assert!(start.elapsed() < Duration::from_millis(100), "another host is not delayed");
+        http.be_polite("a.example");
+        assert!(start.elapsed() >= Duration::from_millis(140), "the second request to a host waits for the delay");
+    }
+
+    #[test]
     fn user_agent_is_honest() {
         let ua = user_agent();
         assert!(ua.starts_with("open-apply/"));
