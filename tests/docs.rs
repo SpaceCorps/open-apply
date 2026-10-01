@@ -243,3 +243,15 @@ fn site_command_reference_matches_the_cli_help() {
         assert!(groups.contains(name), "`{name}` is in --help but not in the site reference");
     }
 }
+
+/// The `--help` block pasted into the README must be what the binary prints today.
+#[test]
+fn readme_help_block_is_current() {
+    let readme = read("README.md");
+    let marker = "The top-level `--help`:\n\n```text\n";
+    let start = readme.find(marker).expect("README has the --help block") + marker.len();
+    let block = &readme[start..start + readme[start..].find("\n```").unwrap()];
+    let env = Env::new();
+    let actual = String::from_utf8(env.cmd().arg("--help").output().unwrap().stdout).unwrap();
+    assert_eq!(squash(block), squash(&actual), "README help block is stale: paste the output of `open-apply --help`");
+}

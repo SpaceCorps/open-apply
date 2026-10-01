@@ -614,4 +614,4 @@ Possible next steps: more public feeds (Workable, Recruitee, SmartRecruiters, Pe
 
 ## Contributing & License
 
-See [AGENTS.md](AGENTS.md) for the layout, invariants and how to add a feed. Maintained by [SpaceCorps](https://github.com/SpaceCorps). Released under the [MIT License](LICENSE).
+See [AGENTS.md](AGENTS.md) for the layout, invariants and how to add a feed. The landing page and the generated command reference live in `site/` (built with Vite+); `pages.yml` deploys them to https://spacecorps.github.io/open-apply/ and has not run yet. Maintained by [SpaceCorps](https://github.com/SpaceCorps). Released under the [MIT License](LICENSE).
