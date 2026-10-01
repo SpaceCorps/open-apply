@@ -5,6 +5,7 @@ use clap::{Args, Parser, Subcommand};
 #[derive(Parser, Debug)]
 #[command(
     name = "open-apply",
+    bin_name = "open-apply",
     author = "SpaceCorps",
     version,
     about = "Job search CLI built for LLM agents - discover postings, prepare materials, record every application, track responses",
@@ -59,7 +60,7 @@ pub enum Command {
 
     #[command(about = "Create the workspace for a job: job.md, profile.json, answers.json, cover-letter.md")]
     Prepare {
-        #[arg(value_name = "ID")]
+        #[arg(value_name = "ID", help = "Job id, for example oa_1a2b3c4d")]
         id: String,
     },
 
@@ -98,7 +99,7 @@ pub enum Command {
 
     #[command(about = "Import a JSON export or a CSV of jobs")]
     Import {
-        #[arg(value_name = "FILE")]
+        #[arg(value_name = "FILE", help = "JSON export or CSV with url and title columns")]
         file: PathBuf,
     },
 
@@ -122,9 +123,9 @@ pub enum ProfileCommand {
         about = "Set a field, e.g. `profile set links.github https://github.com/you` or `profile set answers.why_us \"...\"`"
     )]
     Set {
-        #[arg(value_name = "KEY")]
+        #[arg(value_name = "KEY", help = "Profile field, for example email or answers.why_us")]
         key: String,
-        #[arg(value_name = "VALUE")]
+        #[arg(value_name = "VALUE", help = "New value; empty clears it")]
         value: String,
     },
 }
@@ -135,14 +136,14 @@ pub enum SourceCommand {
         about = "Watch a feed: greenhouse:<board>, lever:<company>, ashby:<org>, remoteok, weworkremotely, arbeitnow"
     )]
     Add {
-        #[arg(value_name = "KIND:IDENT")]
+        #[arg(value_name = "KIND:IDENT", help = "For example greenhouse:acme or remoteok")]
         spec: String,
     },
     #[command(about = "List watched feeds")]
     List,
     #[command(about = "Stop watching a feed")]
     Remove {
-        #[arg(value_name = "KIND:IDENT")]
+        #[arg(value_name = "KIND:IDENT", help = "For example greenhouse:acme or remoteok")]
         spec: String,
     },
 }
@@ -180,14 +181,14 @@ pub enum JobCommand {
     List(JobListArgs),
     #[command(about = "Show one job with its full history")]
     Show {
-        #[arg(value_name = "ID")]
+        #[arg(value_name = "ID", help = "Job id, for example oa_1a2b3c4d")]
         id: String,
     },
     #[command(about = "Edit a job's fields")]
     Update(JobUpdateArgs),
     #[command(about = "Delete a job and its history")]
     Rm {
-        #[arg(value_name = "ID")]
+        #[arg(value_name = "ID", help = "Job id, for example oa_1a2b3c4d")]
         id: String,
         #[arg(long, help = "Confirm the deletion")]
         yes: bool,
@@ -196,17 +197,17 @@ pub enum JobCommand {
 
 #[derive(Args, Debug)]
 pub struct JobAddArgs {
-    #[arg(value_name = "URL")]
+    #[arg(value_name = "URL", help = "Link to the posting")]
     pub url: String,
-    #[arg(long)]
+    #[arg(long, value_name = "TEXT", help = "Job title (needed when the page cannot be read)")]
     pub title: Option<String>,
-    #[arg(long)]
+    #[arg(long, value_name = "TEXT", help = "Company name")]
     pub company: Option<String>,
-    #[arg(long)]
+    #[arg(long, value_name = "TEXT", help = "Location")]
     pub location: Option<String>,
     #[arg(long, help = "Where you found it (default: manual)")]
     pub source: Option<String>,
-    #[arg(long)]
+    #[arg(long, value_name = "TEXT", help = "Your own notes")]
     pub notes: Option<String>,
     #[arg(long, help = "Do not fetch the page or the ATS endpoint; store what was given")]
     pub no_fetch: bool,
@@ -228,17 +229,17 @@ pub struct JobListArgs {
 
 #[derive(Args, Debug)]
 pub struct JobUpdateArgs {
-    #[arg(value_name = "ID")]
+    #[arg(value_name = "ID", help = "Job id, for example oa_1a2b3c4d")]
     pub id: String,
-    #[arg(long)]
+    #[arg(long, value_name = "TEXT")]
     pub title: Option<String>,
-    #[arg(long)]
+    #[arg(long, value_name = "TEXT")]
     pub company: Option<String>,
-    #[arg(long)]
+    #[arg(long, value_name = "TEXT")]
     pub location: Option<String>,
-    #[arg(long)]
+    #[arg(long, value_name = "TEXT")]
     pub notes: Option<String>,
-    #[arg(long)]
+    #[arg(long, value_name = "LABEL")]
     pub source: Option<String>,
     #[arg(long, value_name = "DATE", help = "Correct the application date (job must already be applied)")]
     pub applied_at: Option<String>,
@@ -250,11 +251,11 @@ pub struct JobUpdateArgs {
 pub enum MaterialsCommand {
     #[command(about = "Record the CV (and optionally cover letter) to use for a job")]
     Attach {
-        #[arg(value_name = "ID")]
+        #[arg(value_name = "ID", help = "Job id, for example oa_1a2b3c4d")]
         id: String,
-        #[arg(long, value_name = "PATH")]
+        #[arg(long, value_name = "PATH", help = "CV file to use for this job")]
         cv: Option<PathBuf>,
-        #[arg(long, value_name = "PATH")]
+        #[arg(long, value_name = "PATH", help = "Cover letter file for this job")]
         cover: Option<PathBuf>,
     },
 }
@@ -269,7 +270,7 @@ pub struct NextArgs {
 
 #[derive(Args, Debug)]
 pub struct AppliedArgs {
-    #[arg(value_name = "ID")]
+    #[arg(value_name = "ID", help = "Job id, for example oa_1a2b3c4d")]
     pub id: String,
     #[arg(
         long,
@@ -279,7 +280,7 @@ pub struct AppliedArgs {
     pub via: Option<String>,
     #[arg(long, value_name = "DATE", help = "When you applied (default: now)")]
     pub at: Option<String>,
-    #[arg(long)]
+    #[arg(long, value_name = "TEXT", help = "Remark stored with the event")]
     pub note: Option<String>,
     #[arg(long, help = "Override the guardrails (recorded in the event note)")]
     pub force: bool,
@@ -287,11 +288,14 @@ pub struct AppliedArgs {
 
 #[derive(Args, Debug)]
 pub struct StatusArgs {
-    #[arg(value_name = "ID")]
+    #[arg(value_name = "ID", help = "Job id, for example oa_1a2b3c4d")]
     pub id: String,
-    #[arg(value_name = "STATUS")]
+    #[arg(
+        value_name = "STATUS",
+        help = "lead, saved, ready, acknowledged, screening, interview, assessment, offer, accepted, rejected, ghosted, withdrawn or closed"
+    )]
     pub status: String,
-    #[arg(long)]
+    #[arg(long, value_name = "TEXT", help = "Remark stored with the event")]
     pub note: Option<String>,
     #[arg(long, value_name = "DATE")]
     pub at: Option<String>,
@@ -307,11 +311,11 @@ pub enum EventCommand {
 
 #[derive(Args, Debug)]
 pub struct EventAddArgs {
-    #[arg(value_name = "ID")]
+    #[arg(value_name = "ID", help = "Job id, for example oa_1a2b3c4d")]
     pub id: String,
     #[arg(long = "type", value_name = "TYPE")]
     pub kind: String,
-    #[arg(long)]
+    #[arg(long, value_name = "TEXT", help = "Remark stored with the event")]
     pub note: Option<String>,
     #[arg(long, value_name = "DATE")]
     pub at: Option<String>,
@@ -321,7 +325,7 @@ pub struct EventAddArgs {
 pub struct TriageArgs {
     #[arg(long, allow_hyphen_values = true, value_name = "ADDR", help = "Sender, e.g. \"Jane <jane@acme.com>\"")]
     pub from: Option<String>,
-    #[arg(long, allow_hyphen_values = true, value_name = "TEXT")]
+    #[arg(long, allow_hyphen_values = true, value_name = "TEXT", help = "Subject line")]
     pub subject: Option<String>,
     #[arg(long, help = "Read the email body from stdin")]
     pub stdin: bool,
