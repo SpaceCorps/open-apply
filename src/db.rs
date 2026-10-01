@@ -447,14 +447,14 @@ fn event_from_row(r: &Row) -> rusqlite::Result<Event> {
 const EVENT_COLS: &str = "id, job_id, type, status, note, at, source, recorded_at";
 
 pub fn events_for(conn: &Connection, job_id: &str) -> Result<Vec<Event>> {
-    let sql = format!("SELECT {EVENT_COLS} FROM events WHERE job_id = ?1 ORDER BY at, id");
+    let sql = format!("SELECT {EVENT_COLS} FROM events WHERE job_id = ?1 ORDER BY (type != 'created'), at, id");
     let mut stmt = conn.prepare(&sql)?;
     let rows = stmt.query_map([job_id], event_from_row)?;
     Ok(rows.collect::<rusqlite::Result<Vec<_>>>()?)
 }
 
 pub fn all_events(conn: &Connection) -> Result<Vec<Event>> {
-    let sql = format!("SELECT {EVENT_COLS} FROM events ORDER BY job_id, at, id");
+    let sql = format!("SELECT {EVENT_COLS} FROM events ORDER BY job_id, (type != 'created'), at, id");
     let mut stmt = conn.prepare(&sql)?;
     let rows = stmt.query_map([], event_from_row)?;
     Ok(rows.collect::<rusqlite::Result<Vec<_>>>()?)

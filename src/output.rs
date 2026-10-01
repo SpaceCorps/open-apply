@@ -68,10 +68,12 @@ pub fn write_raw(text: &str) {
     let _ = writeln!(out, "{}", text.trim_end_matches('\n'));
 }
 
-/// Human-facing chatter always goes to stderr so stdout stays machine-readable.
-/// `--quiet` silences it; errors are never silenced.
+/// Human-facing chatter (progress, warnings) goes to stderr, and only when stderr is a terminal:
+/// when an agent or script captures stderr it holds nothing but the error envelope, so it always
+/// parses. The same warnings are also in the command's stdout. `--quiet` silences it on a terminal too.
 pub fn status(message: impl AsRef<str>) {
-    if QUIET.load(Ordering::Relaxed) {
+    use std::io::IsTerminal;
+    if QUIET.load(Ordering::Relaxed) || !std::io::stderr().is_terminal() {
         return;
     }
     let mut err = std::io::stderr().lock();

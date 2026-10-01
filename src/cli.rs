@@ -15,7 +15,7 @@ pub struct Cli {
     #[arg(long, global = true, help = "Emit JSON instead of YAML")]
     pub json: bool,
 
-    #[arg(long, global = true, help = "Suppress progress and warning messages on stderr")]
+    #[arg(long, global = true, help = "Silence progress and warning messages (stderr shows them only on a terminal)")]
     pub quiet: bool,
 
     #[arg(long, global = true, value_name = "PATH", help = "Data home (default: $OPEN_APPLY_HOME or ~/.open-apply)")]
@@ -319,9 +319,9 @@ pub struct EventAddArgs {
 
 #[derive(Args, Debug)]
 pub struct TriageArgs {
-    #[arg(long, value_name = "ADDR", help = "Sender, e.g. \"Jane <jane@acme.com>\"")]
+    #[arg(long, allow_hyphen_values = true, value_name = "ADDR", help = "Sender, e.g. \"Jane <jane@acme.com>\"")]
     pub from: Option<String>,
-    #[arg(long, value_name = "TEXT")]
+    #[arg(long, allow_hyphen_values = true, value_name = "TEXT")]
     pub subject: Option<String>,
     #[arg(long, help = "Read the email body from stdin")]
     pub stdin: bool,

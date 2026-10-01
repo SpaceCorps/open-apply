@@ -218,6 +218,9 @@ pub fn import_csv(conn: &Connection, text: &str) -> Result<ImportReport> {
     db::in_tx(conn, |c| {
         for (n, row) in body.iter().enumerate() {
             let line = n + 2;
+            if row.iter().all(|f| f.trim().is_empty()) {
+                continue;
+            }
             let url_text = get(row, "url");
             let title = get(row, "title");
             if url_text.is_empty() || title.is_empty() {

@@ -375,6 +375,11 @@ pub fn sender_parts(from: &str) -> (String, String, String) {
     (name, addr, domain)
 }
 
+/// Letters and digits only, so `acme-labs` compares equal to the company name "Acme Labs".
+fn alnum(s: &str) -> String {
+    s.chars().filter(|c| c.is_alphanumeric()).collect()
+}
+
 fn domain_in(domain: &str, list: &[&str]) -> bool {
     list.iter().any(|d| domain == *d || domain.ends_with(&format!(".{d}")))
 }
@@ -396,7 +401,7 @@ pub fn match_jobs(email: &Email, jobs: &[Job]) -> Vec<Match> {
         && !domain_in(&domain, ATS_DOMAINS)
         && !domain_in(&domain, FREE_MAIL)
         && !domain_in(&domain, BOARD_DOMAINS);
-    let domain_label = if usable_domain { url::domain_label(&domain) } else { String::new() };
+    let domain_label = if usable_domain { alnum(&url::domain_label(&domain)) } else { String::new() };
 
     let mut out = Vec::new();
     for job in jobs {
@@ -411,7 +416,7 @@ pub fn match_jobs(email: &Email, jobs: &[Job]) -> Vec<Match> {
         if !domain_label.is_empty() {
             let job_host_label = url::host_of(&job.url)
                 .filter(|h| !domain_in(h, ATS_DOMAINS) && !domain_in(h, BOARD_DOMAINS))
-                .map(|h| url::domain_label(&h))
+                .map(|h| alnum(&url::domain_label(&h)))
                 .unwrap_or_default();
             if domain_label == compact || (!job_host_label.is_empty() && domain_label == job_host_label) {
                 score += 5;
@@ -670,6 +675,17 @@ mod tests {
         assert_eq!(pick_unambiguous(&m).unwrap().job_id, "oa_2");
         let tie = match_jobs(&email("hr@acme.com", "Hello from Acme", "Hi"), &jobs);
         assert!(pick_unambiguous(&tie).is_none());
+    }
+
+    #[test]
+    fn hyphenated_domains_match_multi_word_companies() {
+        let jobs = vec![job("oa_1", "Acme Labs Ltd", "Engineer", "https://boards.greenhouse.io/acmelabs/jobs/1")];
+        let m = match_jobs(&email("Jane <jane@acme-labs.com>", "Hi", "Hello"), &jobs);
+        assert_eq!(m.len(), 1);
+        assert_eq!(m[0].reasons, vec!["sender domain matches company"]);
+        // The first word alone is only a weak signal.
+        let weak = match_jobs(&email("Jane <jane@acme.com>", "Hi", "Hello"), &jobs);
+        assert!(weak.is_empty(), "3 points is below the threshold of 4: {weak:?}");
     }
 
     #[test]
