@@ -3,6 +3,9 @@ catalog:
   vite-plus: 1.0.0
 overrides:
   vite@*: "catalog:"
+  # source-map-js@1.2.2 (published 2026-09-30) trips pnpm's release-age cooldown until
+  # 2026-10-01T14:08Z. postcss accepts 1.2.1, so pin it; drop this line afterwards.
+  source-map-js: 1.2.1
 peerDependencyRules:
   allowAny:
     - vite
