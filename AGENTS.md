@@ -129,3 +129,22 @@ starts `.github/workflows/release.yml`, which builds five targets and attaches t
 ```bash
 git tag v0.1.0 && git push origin v0.1.0
 ```
+
+## The site
+
+`site/` is the landing page and command reference, built with Vite+ (`vp`). It is a static page served from
+`https://spacecorps.github.io/open-apply/` (Vite `base` is `/open-apply/`).
+
+```bash
+cd site
+vp install
+vp dev                 # http://localhost:5173/open-apply/
+vp check               # format, lint, types
+vp test                # vitest
+vp build               # site/dist
+node scripts/gen-commands.mjs   # regenerate src/generated/commands.json from the built binary
+```
+
+The command reference is generated from `open-apply --help`; after changing any help text, run
+`cargo build --release` and the generator, and commit the JSON. `tests/docs.rs` fails when the committed JSON
+drifts from the real help output. `.github/workflows/pages.yml` builds and deploys it.

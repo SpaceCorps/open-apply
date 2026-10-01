@@ -1,0 +1,503 @@
+/* Light by default, dark when the OS asks for it, and either one when the visitor picks it. */
+:root {
+  color-scheme: light dark;
+  --bg: #fbfbfa;
+  --bg-raised: #ffffff;
+  --text: #16181d;
+  --muted: #566070;
+  --border: #dcdee3;
+  --accent: #1f4fc4;
+  --accent-text: #ffffff;
+  --code-bg: #f0f1f4;
+  --code-text: #1b2030;
+  --focus: #1f4fc4;
+  --shadow: 0 1px 2px rgb(16 24 40 / 0.06);
+  --font:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono:
+    ui-monospace, "SFMono-Regular", "Cascadia Code", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1116;
+    --bg-raised: #151a22;
+    --text: #e7eaf0;
+    --muted: #9ba4b3;
+    --border: #283040;
+    --accent: #7ba4ff;
+    --accent-text: #0b1020;
+    --code-bg: #171d27;
+    --code-text: #dfe6f5;
+    --focus: #7ba4ff;
+    --shadow: none;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1116;
+  --bg-raised: #151a22;
+  --text: #e7eaf0;
+  --muted: #9ba4b3;
+  --border: #283040;
+  --accent: #7ba4ff;
+  --accent-text: #0b1020;
+  --code-bg: #171d27;
+  --code-text: #dfe6f5;
+  --focus: #7ba4ff;
+  --shadow: none;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 0.15em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+code,
+pre {
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+
+code {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin: 0 0 0.6rem;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  max-width: 22ch;
+}
+
+h2 {
+  font-size: 1.7rem;
+  margin-top: 0;
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+.wrap {
+  width: min(62rem, 100% - 2.5rem);
+  margin-inline: auto;
+}
+
+section.wrap {
+  padding-block: 3.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.skip {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--accent);
+  color: var(--accent-text);
+  padding: 0.5rem 1rem;
+  z-index: 20;
+}
+
+.skip:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-height: 3.5rem;
+}
+
+.brand {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.topbar nav {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.topbar nav a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+
+.topbar nav a:hover {
+  color: var(--text);
+}
+
+.bar-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ghost {
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ghost:hover {
+  background: var(--code-bg);
+}
+
+.hero {
+  padding-block: 4rem 3.5rem;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.lede {
+  font-size: 1.2rem;
+  color: var(--muted);
+  max-width: 44rem;
+}
+
+.section-lede {
+  color: var(--muted);
+  max-width: 46rem;
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.button {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--accent-text);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+}
+
+.button.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.facts {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0 0;
+  display: grid;
+  gap: 0.6rem;
+  color: var(--muted);
+}
+
+.codeblock {
+  position: relative;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 0 0 1.25rem;
+}
+
+.codeblock pre {
+  margin: 0;
+  padding: 0.9rem 4.5rem 0.9rem 1rem;
+  overflow-x: auto;
+  color: var(--code-text);
+  line-height: 1.5;
+}
+
+.codeblock code {
+  background: none;
+  padding: 0;
+  font-size: 1em;
+}
+
+.copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--text);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.15rem 0.55rem;
+  cursor: pointer;
+}
+
+.steps {
+  list-style: none;
+  counter-reset: step;
+  padding: 0;
+  margin: 2rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.steps li {
+  counter-increment: step;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem 1.1rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.steps h3::before {
+  content: counter(step) ". ";
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.steps p {
+  margin: 0;
+  color: var(--muted);
+  flex: 1;
+}
+
+.steps code {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 0.45rem 0.6rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.grid article {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  box-shadow: var(--shadow);
+}
+
+.grid p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.filter {
+  display: grid;
+  gap: 0.3rem;
+  max-width: 24rem;
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.filter input {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.45rem 0.65rem;
+}
+
+.command-section h3 {
+  margin: 1.75rem 0 0.6rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.command {
+  border: 1px solid var(--border);
+  background: var(--bg-raised);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.command summary {
+  cursor: pointer;
+  padding: 0.6rem 0.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.9rem;
+}
+
+.command .about {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.command-body {
+  padding: 0 0.85rem 0.85rem;
+}
+
+.command-body pre {
+  margin: 0 0 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--code-bg);
+  border-radius: 6px;
+  overflow-x: auto;
+  color: var(--code-text);
+}
+
+.command-body dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0;
+}
+
+.command-body dt {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+.command-body dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+th {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.plain {
+  padding-left: 1.2rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.foot {
+  padding-block: 2rem 3rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 40rem) {
+  .bar {
+    flex-wrap: wrap;
+    padding-block: 0.5rem;
+  }
+
+  .topbar nav {
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .command-body dl {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

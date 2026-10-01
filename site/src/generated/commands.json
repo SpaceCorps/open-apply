@@ -1,0 +1,537 @@
+{
+  "version": "0.1.0",
+  "about": "Job search CLI built for LLM agents - discover postings, prepare materials, record every application, track responses",
+  "global": [
+    {
+      "flag": "--json",
+      "description": "Emit JSON instead of YAML"
+    },
+    {
+      "flag": "--quiet",
+      "description": "Silence progress and warning messages (stderr shows them only on a terminal)"
+    },
+    {
+      "flag": "--home <PATH>",
+      "description": "Data home (default: $OPEN_APPLY_HOME or ~/.open-apply)"
+    }
+  ],
+  "commands": [
+    {
+      "path": "init",
+      "group": "init",
+      "about": "Create the data home with a profile template and default config",
+      "usage": "open-apply init [OPTIONS]",
+      "arguments": [],
+      "options": []
+    },
+    {
+      "path": "doctor",
+      "group": "doctor",
+      "about": "Check the home, database, schema and profile completeness",
+      "usage": "open-apply doctor [OPTIONS]",
+      "arguments": [],
+      "options": []
+    },
+    {
+      "path": "profile show",
+      "group": "profile",
+      "about": "Print the profile",
+      "usage": "open-apply profile show [OPTIONS]",
+      "arguments": [],
+      "options": []
+    },
+    {
+      "path": "profile path",
+      "group": "profile",
+      "about": "Print the path of profile.yaml",
+      "usage": "open-apply profile path [OPTIONS]",
+      "arguments": [],
+      "options": []
+    },
+    {
+      "path": "profile set",
+      "group": "profile",
+      "about": "Set a field, e.g. `profile set links.github https://github.com/you` or `profile set answers.why_us \"...\"`",
+      "usage": "open-apply profile set [OPTIONS] <KEY> <VALUE>",
+      "arguments": [
+        {
+          "name": "<KEY>",
+          "description": "Profile field, for example email or answers.why_us"
+        },
+        {
+          "name": "<VALUE>",
+          "description": "New value; empty clears it"
+        }
+      ],
+      "options": []
+    },
+    {
+      "path": "source add",
+      "group": "source",
+      "about": "Watch a feed: greenhouse:<board>, lever:<company>, ashby:<org>, remoteok, weworkremotely, arbeitnow",
+      "usage": "open-apply source add [OPTIONS] <KIND:IDENT>",
+      "arguments": [
+        {
+          "name": "<KIND:IDENT>",
+          "description": "For example greenhouse:acme or remoteok"
+        }
+      ],
+      "options": []
+    },
+    {
+      "path": "source list",
+      "group": "source",
+      "about": "List watched feeds",
+      "usage": "open-apply source list [OPTIONS]",
+      "arguments": [],
+      "options": []
+    },
+    {
+      "path": "source remove",
+      "group": "source",
+      "about": "Stop watching a feed",
+      "usage": "open-apply source remove [OPTIONS] <KIND:IDENT>",
+      "arguments": [
+        {
+          "name": "<KIND:IDENT>",
+          "description": "For example greenhouse:acme or remoteok"
+        }
+      ],
+      "options": []
+    },
+    {
+      "path": "search",
+      "group": "search",
+      "about": "Search public job feeds (no login, no scraping)",
+      "usage": "open-apply search [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flag": "--source <KIND:IDENT>",
+          "description": "Feed to query (repeatable); default: your watched feeds"
+        },
+        {
+          "flag": "--query <TEXT>",
+          "description": "Every word must appear in title, company, tags or description"
+        },
+        {
+          "flag": "--location <TEXT>",
+          "description": "Location must contain this text"
+        },
+        {
+          "flag": "--remote",
+          "description": "Only remote postings"
+        },
+        {
+          "flag": "--limit <N>",
+          "description": "Maximum results (sampled across feeds) [default: 25]"
+        },
+        {
+          "flag": "--save",
+          "description": "Store results as `lead` jobs, skipping duplicates"
+        }
+      ]
+    },
+    {
+      "path": "job add",
+      "group": "job",
+      "about": "Add a job by URL (ATS pages and JobPosting JSON-LD are read automatically)",
+      "usage": "open-apply job add [OPTIONS] <URL>",
+      "arguments": [
+        {
+          "name": "<URL>",
+          "description": "Link to the posting"
+        }
+      ],
+      "options": [
+        {
+          "flag": "--title <TEXT>",
+          "description": "Job title (needed when the page cannot be read)"
+        },
+        {
+          "flag": "--company <TEXT>",
+          "description": "Company name"
+        },
+        {
+          "flag": "--location <TEXT>",
+          "description": "Location"
+        },
+        {
+          "flag": "--source <SOURCE>",
+          "description": "Where you found it (default: manual)"
+        },
+        {
+          "flag": "--notes <TEXT>",
+          "description": "Your own notes"
+        },
+        {
+          "flag": "--no-fetch",
+          "description": "Do not fetch the page or the ATS endpoint; store what was given"
+        },
+        {
+          "flag": "--allow-duplicate",
+          "description": "Add even if the same company, title and location is already stored"
+        }
+      ]
+    },
+    {
+      "path": "job list",
+      "group": "job",
+      "about": "List jobs, newest first, with optional filters",
+      "usage": "open-apply job list [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flag": "--status <STATUS>",
+          "description": "Only this status (comma-separated list allowed)"
+        },
+        {
+          "flag": "--company <TEXT>",
+          "description": "Company name contains this text"
+        },
+        {
+          "flag": "--since <DATE>",
+          "description": "Added on or after this date"
+        },
+        {
+          "flag": "--limit <N>",
+          "description": "Maximum jobs to list [default: 50]"
+        }
+      ]
+    },
+    {
+      "path": "job show",
+      "group": "job",
+      "about": "Show one job with its full history",
+      "usage": "open-apply job show [OPTIONS] <ID>",
+      "arguments": [
+        {
+          "name": "<ID>",
+          "description": "Job id, for example oa_1a2b3c4d"
+        }
+      ],
+      "options": []
+    },
+    {
+      "path": "job update",
+      "group": "job",
+      "about": "Edit a job's fields",
+      "usage": "open-apply job update [OPTIONS] <ID>",
+      "arguments": [
+        {
+          "name": "<ID>",
+          "description": "Job id, for example oa_1a2b3c4d"
+        }
+      ],
+      "options": [
+        {
+          "flag": "--title <TEXT>",
+          "description": ""
+        },
+        {
+          "flag": "--company <TEXT>",
+          "description": ""
+        },
+        {
+          "flag": "--location <TEXT>",
+          "description": ""
+        },
+        {
+          "flag": "--notes <TEXT>",
+          "description": ""
+        },
+        {
+          "flag": "--source <LABEL>",
+          "description": ""
+        },
+        {
+          "flag": "--applied-at <DATE>",
+          "description": "Correct the application date (job must already be applied)"
+        },
+        {
+          "flag": "--via <CHANNEL>",
+          "description": "Correct the channel: linkedin, ats, email, referral, other"
+        }
+      ]
+    },
+    {
+      "path": "job rm",
+      "group": "job",
+      "about": "Delete a job and its history",
+      "usage": "open-apply job rm [OPTIONS] <ID>",
+      "arguments": [
+        {
+          "name": "<ID>",
+          "description": "Job id, for example oa_1a2b3c4d"
+        }
+      ],
+      "options": [
+        {
+          "flag": "--yes",
+          "description": "Confirm the deletion"
+        }
+      ]
+    },
+    {
+      "path": "next",
+      "group": "next",
+      "about": "The agent work queue: next jobs to act on, with profile fields and saved answers",
+      "usage": "open-apply next [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flag": "--count <N>",
+          "description": "How many jobs to return [default: 3]"
+        },
+        {
+          "flag": "--force",
+          "description": "Ignore the daily cap, company cooldown and materials requirement"
+        }
+      ]
+    },
+    {
+      "path": "prepare",
+      "group": "prepare",
+      "about": "Create the workspace for a job: job.md, profile.json, answers.json, cover-letter.md",
+      "usage": "open-apply prepare [OPTIONS] <ID>",
+      "arguments": [
+        {
+          "name": "<ID>",
+          "description": "Job id, for example oa_1a2b3c4d"
+        }
+      ],
+      "options": []
+    },
+    {
+      "path": "materials attach",
+      "group": "materials",
+      "about": "Record the CV (and optionally cover letter) to use for a job",
+      "usage": "open-apply materials attach [OPTIONS] <ID>",
+      "arguments": [
+        {
+          "name": "<ID>",
+          "description": "Job id, for example oa_1a2b3c4d"
+        }
+      ],
+      "options": [
+        {
+          "flag": "--cv <PATH>",
+          "description": "CV file to use for this job"
+        },
+        {
+          "flag": "--cover <PATH>",
+          "description": "Cover letter file for this job"
+        }
+      ]
+    },
+    {
+      "path": "applied",
+      "group": "applied",
+      "about": "Record that you applied (enforces the daily cap and company cooldown)",
+      "usage": "open-apply applied [OPTIONS] <ID>",
+      "arguments": [
+        {
+          "name": "<ID>",
+          "description": "Job id, for example oa_1a2b3c4d"
+        }
+      ],
+      "options": [
+        {
+          "flag": "--via <CHANNEL>",
+          "description": "linkedin, ats, email, referral or other (default: inferred from the URL)"
+        },
+        {
+          "flag": "--at <DATE>",
+          "description": "When you applied (default: now)"
+        },
+        {
+          "flag": "--note <TEXT>",
+          "description": "Remark stored with the event"
+        },
+        {
+          "flag": "--force",
+          "description": "Override the guardrails (recorded in the event note)"
+        }
+      ]
+    },
+    {
+      "path": "status",
+      "group": "status",
+      "about": "Set a job's status by hand",
+      "usage": "open-apply status [OPTIONS] <ID> <STATUS>",
+      "arguments": [
+        {
+          "name": "<ID>",
+          "description": "Job id, for example oa_1a2b3c4d"
+        },
+        {
+          "name": "<STATUS>",
+          "description": "lead, saved, ready, acknowledged, screening, interview, assessment, offer, accepted, rejected, ghosted, withdrawn or closed"
+        }
+      ],
+      "options": [
+        {
+          "flag": "--note <TEXT>",
+          "description": "Remark stored with the event"
+        },
+        {
+          "flag": "--at <DATE>",
+          "description": "When it happened (default: now)"
+        }
+      ]
+    },
+    {
+      "path": "event add",
+      "group": "event",
+      "about": "Record something that happened: ack, screen, interview, assessment, offer, rejection, follow_up, note",
+      "usage": "open-apply event add [OPTIONS] --type <TYPE> <ID>",
+      "arguments": [
+        {
+          "name": "<ID>",
+          "description": "Job id, for example oa_1a2b3c4d"
+        }
+      ],
+      "options": [
+        {
+          "flag": "--type <TYPE>",
+          "description": "ack, screen, interview, assessment, offer, rejection, follow_up or note"
+        },
+        {
+          "flag": "--note <TEXT>",
+          "description": "Remark stored with the event"
+        },
+        {
+          "flag": "--at <DATE>",
+          "description": "When it happened (default: now)"
+        }
+      ]
+    },
+    {
+      "path": "triage",
+      "group": "triage",
+      "about": "Classify an inbound employer email and match it to an application",
+      "usage": "open-apply triage [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flag": "--from <ADDR>",
+          "description": "Sender, e.g. \"Jane <jane@acme.com>\""
+        },
+        {
+          "flag": "--subject <TEXT>",
+          "description": "Subject line"
+        },
+        {
+          "flag": "--stdin",
+          "description": "Read the email body from stdin"
+        },
+        {
+          "flag": "--apply",
+          "description": "Record the event and advance the status (otherwise a dry run)"
+        },
+        {
+          "flag": "--job <ID>",
+          "description": "Use this application instead of matching"
+        },
+        {
+          "flag": "--at <DATE>",
+          "description": "When the email arrived (default: now)"
+        }
+      ]
+    },
+    {
+      "path": "stale",
+      "group": "stale",
+      "about": "List or mark applications that never got a response",
+      "usage": "open-apply stale [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flag": "--days <N>",
+          "description": "Days without a response [default: 21]"
+        },
+        {
+          "flag": "--mark",
+          "description": "Mark them ghosted"
+        }
+      ]
+    },
+    {
+      "path": "followups",
+      "group": "followups",
+      "about": "Applications due a polite follow-up",
+      "usage": "open-apply followups [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flag": "--days <N>",
+          "description": "Days of silence before a follow-up is due [default: 7]"
+        }
+      ]
+    },
+    {
+      "path": "stats",
+      "group": "stats",
+      "about": "Funnel counts, response rate and response time",
+      "usage": "open-apply stats [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flag": "--since <DATE>",
+          "description": "Only jobs applied to (or added, if never applied) on or after this date"
+        }
+      ]
+    },
+    {
+      "path": "export",
+      "group": "export",
+      "about": "Export jobs and history as json, csv or md",
+      "usage": "open-apply export [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flag": "--format <FORMAT>",
+          "description": "json, csv or md [default: json]"
+        },
+        {
+          "flag": "--out <PATH>",
+          "description": "Write to a file instead of stdout"
+        }
+      ]
+    },
+    {
+      "path": "import",
+      "group": "import",
+      "about": "Import a JSON export or a CSV of jobs",
+      "usage": "open-apply import [OPTIONS] <FILE>",
+      "arguments": [
+        {
+          "name": "<FILE>",
+          "description": "JSON export or CSV with url and title columns"
+        }
+      ],
+      "options": []
+    },
+    {
+      "path": "agent-readme",
+      "group": "agent-readme",
+      "about": "Print the operating manual for an LLM agent",
+      "usage": "open-apply agent-readme [OPTIONS]",
+      "arguments": [],
+      "options": []
+    },
+    {
+      "path": "skill install",
+      "group": "skill",
+      "about": "Write the skill to ~/.claude/skills/open-apply/SKILL.md",
+      "usage": "open-apply skill install [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flag": "--dir <PATH>",
+          "description": "Skills directory to install into (the skill goes in PATH/open-apply/)"
+        }
+      ]
+    }
+  ]
+}

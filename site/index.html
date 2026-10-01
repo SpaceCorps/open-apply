@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="open-apply is a Rust CLI that lets an AI agent help you run a job search: discover postings from public feeds, prepare materials, record every application and track employer responses."
+    />
+    <title>open-apply: a job search CLI for AI agents</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      // Set the theme before first paint so there is no flash.
+      try {
+        var saved = localStorage.getItem("open-apply-theme");
+        if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <div class="wrap bar">
+        <a class="brand" href="#top" aria-label="open-apply home">open-apply</a>
+        <nav aria-label="Sections">
+          <a href="#loop">Loop</a>
+          <a href="#install">Install</a>
+          <a href="#quickstart">Quickstart</a>
+          <a href="#commands">Commands</a>
+          <a href="#exit-codes">Exit codes</a>
+          <a href="#safety">Safety</a>
+        </nav>
+        <div class="bar-actions">
+          <button id="theme-toggle" class="ghost" type="button" aria-label="Switch color theme">
+            Theme
+          </button>
+          <a class="ghost" href="https://github.com/SpaceCorps/open-apply">GitHub</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero wrap" id="top">
+        <p class="eyebrow">Rust CLI, MIT licensed</p>
+        <h1>The system of record for an agent-assisted job search.</h1>
+        <p class="lede">
+          open-apply finds postings in public feeds, prepares materials per job, records every
+          application, and tracks whether and when employers answer. Your agent applies in a
+          browser; open-apply keeps the books, with guardrails on volume.
+        </p>
+        <div class="cta">
+          <a class="button" href="#install">Install</a>
+          <a class="button secondary" href="#quickstart">See a session</a>
+        </div>
+        <div class="codeblock" data-copy>
+          <pre><code>cargo install --git https://github.com/SpaceCorps/open-apply --locked</code></pre>
+        </div>
+        <ul class="facts">
+          <li>
+            <strong>Public sources only.</strong> Greenhouse, Lever, Ashby, RemoteOK, We Work
+            Remotely, Arbeitnow.
+          </li>
+          <li>
+            <strong>Never submits.</strong> No login, no form filling, no CAPTCHA handling, no
+            scraping of LinkedIn.
+          </li>
+          <li>
+            <strong>Built for agents.</strong> YAML or JSON output, structured errors, stable exit
+            codes.
+          </li>
+        </ul>
+      </section>
+
+      <section class="wrap" id="loop" aria-labelledby="loop-title">
+        <h2 id="loop-title">The loop an agent runs</h2>
+        <p class="section-lede">
+          Seven steps, each one a command. The tool supplies the data and records the result; the
+          agent (or you) does the applying.
+        </p>
+        <ol class="steps">
+          <li>
+            <h3>Discover</h3>
+            <p>
+              Query public feeds or add a posting by URL. Results are stored as leads, duplicates
+              skipped.
+            </p>
+            <code>open-apply search --query rust --remote --save</code>
+          </li>
+          <li>
+            <h3>Pick</h3>
+            <p>
+              The work queue returns jobs with your profile fields, saved answers filled in per
+              company, and the guardrail state.
+            </p>
+            <code>open-apply next --count 3</code>
+          </li>
+          <li>
+            <h3>Prepare</h3>
+            <p>
+              A workspace per job: the posting (in untrusted delimiters), resolved profile, answers,
+              an empty cover letter.
+            </p>
+            <code>open-apply prepare oa_ac9b7206</code>
+          </li>
+          <li>
+            <h3>Apply</h3>
+            <p>
+              In a browser, with the user's go-ahead for each submission. open-apply is not
+              involved.
+            </p>
+            <code>(LinkedIn, an ATS, email, a referral)</code>
+          </li>
+          <li>
+            <h3>Record</h3>
+            <p>
+              Only after it was really submitted. The daily cap and company cooldown are enforced
+              here.
+            </p>
+            <code>open-apply applied oa_ac9b7206 --via ats</code>
+          </li>
+          <li>
+            <h3>Triage</h3>
+            <p>Classify an employer reply, match it to an application, advance the status.</p>
+            <code>open-apply triage --stdin --apply</code>
+          </li>
+          <li>
+            <h3>Follow up</h3>
+            <p>Who is due a nudge, who never answered, what the response rate is.</p>
+            <code>open-apply followups &amp;&amp; open-apply stats</code>
+          </li>
+        </ol>
+      </section>
+
+      <section class="wrap" id="features" aria-labelledby="features-title">
+        <h2 id="features-title">What you get</h2>
+        <div class="grid">
+          <article>
+            <h3>One local database</h3>
+            <p>
+              SQLite in WAL mode with migrations. Every status change is an immutable row: type,
+              note, when it happened, where it came from.
+            </p>
+          </article>
+          <article>
+            <h3>Read any posting</h3>
+            <p>
+              Greenhouse, Lever and Ashby links through their public JSON; other pages through
+              schema.org JobPosting data. LinkedIn and Indeed links are tracked, never fetched.
+            </p>
+          </article>
+          <article>
+            <h3>Guardrails</h3>
+            <p>
+              25 applications per rolling 24 hours, 90 days between roles at one company, optional
+              materials requirement. <code>--force</code> overrides and leaves a mark.
+            </p>
+          </article>
+          <article>
+            <h3>Reply triage</h3>
+            <p>
+              A rule-based classifier for acknowledgements, screens, interviews, assessments, offers
+              and rejections. Ambiguous matches are a conflict, not a guess.
+            </p>
+          </article>
+          <article>
+            <h3>Prompt-injection aware</h3>
+            <p>
+              Job text and email are always wrapped in explicit delimiters, delimiter look-alikes
+              are neutralized, and nothing in them is ever executed.
+            </p>
+          </article>
+          <article>
+            <h3>Honest numbers</h3>
+            <p>
+              Funnel per status, response rate, median days to the first reply, split by source and
+              by channel.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="wrap" id="install" aria-labelledby="install-title">
+        <h2 id="install-title">Install</h2>
+        <div class="codeblock" data-copy>
+          <pre><code>cargo install --git https://github.com/SpaceCorps/open-apply --locked</code></pre>
+        </div>
+        <p>
+          Tagged releases attach archives for macOS (Apple Silicon and Intel), Linux (x86_64 and
+          aarch64, musl) and Windows (x64). No release has been cut yet, so build from source for
+          now.
+        </p>
+        <h3>Use it from Claude Code</h3>
+        <div class="codeblock" data-copy>
+          <pre><code>open-apply skill install     # writes ~/.claude/skills/open-apply/SKILL.md
+open-apply agent-readme      # prints the same manual</code></pre>
+        </div>
+      </section>
+
+      <section class="wrap" id="quickstart" aria-labelledby="quickstart-title">
+        <h2 id="quickstart-title">A session, with real output</h2>
+        <p class="section-lede">
+          Captured from the release binary. Example Co is made up; the data home is abbreviated.
+        </p>
+        <h3>Set up and record an application</h3>
+        <div class="codeblock" data-copy>
+          <pre><code>$ open-apply init
+$ open-apply profile set name "Ada Lovelace"
+$ open-apply profile set email ada@example.com
+$ open-apply job add https://example.com/jobs/senior-rust-engineer --no-fetch \
+    --title "Senior Rust Engineer" --company "Example Co" --location "Remote (EU)"
+$ open-apply prepare oa_ac9b7206
+$ open-apply applied oa_ac9b7206 --via ats --note "cover letter v1"
+id: oa_ac9b7206
+status: applied
+company: Example Co
+title: Senior Rust Engineer
+applied_at: 2026-10-01T11:41:08Z
+via: ats
+applied_last_24h: 1
+remaining_today: 24
+hint: if nothing comes back, `open-apply followups` and `open-apply stale` will surface oa_ac9b7206</code></pre>
+        </div>
+        <h3>Triage the reply</h3>
+        <div class="codeblock" data-copy>
+          <pre><code>$ open-apply triage --from "Example Co Recruiting &lt;jobs@example.com&gt;" \
+    --subject "Thank you for applying to Example Co" --stdin --apply &lt; email.txt
+...
+classification:
+  class: ack
+  confidence: high
+  score: 11
+  evidence:
+  - we have received your application
+  - thank you for applying
+matches:
+- id: oa_ac9b7206
+  company: Example Co
+  title: Senior Rust Engineer
+  status: applied
+  score: 17
+  reasons:
+  - sender domain matches company
+  - sender name contains company
+  - subject contains company
+  - body contains company
+  - job title appears
+ambiguous: false
+applied: true
+recorded:
+  job_id: oa_ac9b7206
+  event: ack
+  status_before: applied
+  status: acknowledged
+  status_changed: true
+  at: 2026-10-01T11:41:08Z</code></pre>
+        </div>
+        <h3>A guardrail says no</h3>
+        <div class="codeblock" data-copy>
+          <pre><code>$ open-apply applied oa_7a247ec1        # daily_application_cap: 1 in config.yaml
+error:
+  code: guardrail
+  message: 'daily cap reached: 1 application(s) in the last 24 hours, cap is 1'
+  hint: do not mass-apply; pick a better-fitting role, or pass --force if you have decided this is right
+  detail:
+    violations:
+    - guardrail: daily_cap
+      message: 'daily cap reached: 1 application(s) in the last 24 hours, cap is 1'</code></pre>
+        </div>
+      </section>
+
+      <section class="wrap" id="commands" aria-labelledby="commands-title">
+        <h2 id="commands-title">Command reference</h2>
+        <p class="section-lede">
+          Generated from <code>open-apply --help</code>. Global flags on every command:
+          <span id="global-flags"></span>
+        </p>
+        <label class="filter">
+          <span>Filter commands</span>
+          <input
+            id="command-filter"
+            type="search"
+            placeholder="search, triage, guardrail"
+            autocomplete="off"
+          />
+        </label>
+        <div id="command-list" aria-live="polite"></div>
+      </section>
+
+      <section class="wrap" id="exit-codes" aria-labelledby="exit-title">
+        <h2 id="exit-title">Exit codes and errors</h2>
+        <p class="section-lede">
+          Output is YAML on stdout, JSON with <code>--json</code>. Failures print
+          <code>{error: {code, message, hint}}</code> on stderr and exit with the matching code.
+          Progress chatter appears only when stderr is a terminal, so captured stderr is always just
+          the envelope.
+        </p>
+        <div class="table-scroll">
+          <table id="exit-table">
+            <thead>
+              <tr>
+                <th scope="col">Exit</th>
+                <th scope="col">code</th>
+                <th scope="col">Meaning</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="wrap" id="safety" aria-labelledby="safety-title">
+        <h2 id="safety-title">Safety stance</h2>
+        <ul class="plain">
+          <li>open-apply does not scrape LinkedIn.</li>
+          <li>It does not bypass CAPTCHAs or bot detection.</li>
+          <li>It does not store site passwords.</li>
+          <li>It does not submit forms itself.</li>
+        </ul>
+        <p>
+          The agent, or you, applies in a browser; open-apply supplies the data and records the
+          result, so it stays the system of record wherever the application was made. A 401, 403 or
+          429 from any endpoint is reported, never retried around.
+        </p>
+        <p>
+          Job descriptions and emails are untrusted input. They are echoed only between
+          <code>--- untrusted job content begins ---</code> and
+          <code>--- untrusted job content ends ---</code> (and the <code>email</code> equivalents),
+          and an agent should treat whatever is inside as data, never as instructions.
+        </p>
+        <p>
+          Low-quality mass-applying hurts the applicant, so the defaults slow you down on purpose:
+          25 applications per rolling 24 hours and 90 days between roles at one company.
+        </p>
+      </section>
+    </main>
+
+    <footer class="wrap foot">
+      <p>
+        MIT licensed. Maintained by <a href="https://github.com/SpaceCorps">SpaceCorps</a>.
+        <a href="https://github.com/SpaceCorps/open-apply/blob/main/docs/agent-guide.md"
+          >Agent guide</a
+        >, <a href="https://github.com/SpaceCorps/open-apply/blob/main/docs/schema.md">schema</a>,
+        <a href="https://github.com/SpaceCorps/open-apply/blob/main/AGENTS.md">contributing</a>.
+      </p>
+      <p id="version" class="muted"></p>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

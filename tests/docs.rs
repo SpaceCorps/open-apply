@@ -188,3 +188,58 @@ fn docs_folder_has_the_guides() {
         assert!(schema.contains(needle), "docs/schema.md is missing {needle}");
     }
 }
+
+fn squash(s: &str) -> String {
+    s.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
+/// The site's command reference is generated from `--help` (site/scripts/gen-commands.mjs). If this
+/// fails, rebuild the binary and run `node site/scripts/gen-commands.mjs`.
+#[test]
+fn site_command_reference_matches_the_cli_help() {
+    let data: serde_json::Value = serde_json::from_str(&read("site/src/generated/commands.json")).unwrap();
+    assert_eq!(data["version"], env!("CARGO_PKG_VERSION"));
+    let env = Env::new();
+    let commands = data["commands"].as_array().unwrap();
+    assert_eq!(commands.len(), COMMANDS.len());
+
+    for c in commands {
+        let path = c["path"].as_str().unwrap();
+        assert!(COMMANDS.contains(&path), "the site documents `{path}`, which is not a command");
+        let mut args: Vec<&str> = path.split(' ').collect();
+        args.push("--help");
+        let out = env.cmd().args(&args).output().unwrap();
+        let help = squash(&String::from_utf8(out.stdout).unwrap());
+        assert!(
+            help.contains(&squash(c["about"].as_str().unwrap())),
+            "`{path}`: the about text changed, regenerate the site data"
+        );
+        assert!(
+            help.contains(&squash(c["usage"].as_str().unwrap())),
+            "`{path}`: usage changed, regenerate the site data"
+        );
+        for o in c["options"].as_array().unwrap() {
+            assert!(help.contains(&squash(o["flag"].as_str().unwrap())), "`{path}`: option {} is gone", o["flag"]);
+            assert!(
+                help.contains(&squash(o["description"].as_str().unwrap())),
+                "`{path}`: option text changed for {}",
+                o["flag"]
+            );
+        }
+    }
+    // And the other way: nothing in the top-level help is missing from the site.
+    let top = String::from_utf8(env.cmd().arg("--help").output().unwrap().stdout).unwrap();
+    let groups: std::collections::BTreeSet<&str> = commands.iter().map(|c| c["group"].as_str().unwrap()).collect();
+    let listed: Vec<&str> = top
+        .lines()
+        .skip_while(|l| !l.starts_with("Commands:"))
+        .skip(1)
+        .take_while(|l| !l.trim().is_empty())
+        .map(|l| l.split_whitespace().next().unwrap())
+        .filter(|name| *name != "help")
+        .collect();
+    assert_eq!(listed.len(), groups.len());
+    for name in listed {
+        assert!(groups.contains(name), "`{name}` is in --help but not in the site reference");
+    }
+}

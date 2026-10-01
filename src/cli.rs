@@ -177,7 +177,7 @@ pub struct SearchArgs {
 pub enum JobCommand {
     #[command(about = "Add a job by URL (ATS pages and JobPosting JSON-LD are read automatically)")]
     Add(JobAddArgs),
-    #[command(about = "List jobs")]
+    #[command(about = "List jobs, newest first, with optional filters")]
     List(JobListArgs),
     #[command(about = "Show one job with its full history")]
     Show {
@@ -223,7 +223,7 @@ pub struct JobListArgs {
     pub company: Option<String>,
     #[arg(long, value_name = "DATE", help = "Added on or after this date")]
     pub since: Option<String>,
-    #[arg(long, value_name = "N", default_value_t = 50)]
+    #[arg(long, value_name = "N", default_value_t = 50, help = "Maximum jobs to list")]
     pub limit: usize,
 }
 
@@ -262,7 +262,7 @@ pub enum MaterialsCommand {
 
 #[derive(Args, Debug)]
 pub struct NextArgs {
-    #[arg(long, value_name = "N", default_value_t = 3)]
+    #[arg(long, value_name = "N", default_value_t = 3, help = "How many jobs to return")]
     pub count: usize,
     #[arg(long, help = "Ignore the daily cap, company cooldown and materials requirement")]
     pub force: bool,
@@ -297,7 +297,7 @@ pub struct StatusArgs {
     pub status: String,
     #[arg(long, value_name = "TEXT", help = "Remark stored with the event")]
     pub note: Option<String>,
-    #[arg(long, value_name = "DATE")]
+    #[arg(long, value_name = "DATE", help = "When it happened (default: now)")]
     pub at: Option<String>,
 }
 
@@ -313,11 +313,15 @@ pub enum EventCommand {
 pub struct EventAddArgs {
     #[arg(value_name = "ID", help = "Job id, for example oa_1a2b3c4d")]
     pub id: String,
-    #[arg(long = "type", value_name = "TYPE")]
+    #[arg(
+        long = "type",
+        value_name = "TYPE",
+        help = "ack, screen, interview, assessment, offer, rejection, follow_up or note"
+    )]
     pub kind: String,
     #[arg(long, value_name = "TEXT", help = "Remark stored with the event")]
     pub note: Option<String>,
-    #[arg(long, value_name = "DATE")]
+    #[arg(long, value_name = "DATE", help = "When it happened (default: now)")]
     pub at: Option<String>,
 }
 
@@ -339,7 +343,7 @@ pub struct TriageArgs {
 
 #[derive(Args, Debug)]
 pub struct StaleArgs {
-    #[arg(long, value_name = "N", default_value_t = 21)]
+    #[arg(long, value_name = "N", default_value_t = 21, help = "Days without a response")]
     pub days: u32,
     #[arg(long, help = "Mark them ghosted")]
     pub mark: bool,
@@ -347,13 +351,13 @@ pub struct StaleArgs {
 
 #[derive(Args, Debug)]
 pub struct FollowupsArgs {
-    #[arg(long, value_name = "N", default_value_t = 7)]
+    #[arg(long, value_name = "N", default_value_t = 7, help = "Days of silence before a follow-up is due")]
     pub days: u32,
 }
 
 #[derive(Args, Debug)]
 pub struct StatsArgs {
-    #[arg(long, value_name = "DATE")]
+    #[arg(long, value_name = "DATE", help = "Only jobs applied to (or added, if never applied) on or after this date")]
     pub since: Option<String>,
 }
 
