@@ -1,0 +1,35 @@
+[package]
+name = "open-apply"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89"
+description = "CLI for running a job search with an AI agent - discover public postings, prepare materials, record every application, and track employer responses"
+license = "MIT"
+repository = "https://github.com/SpaceCorps/open-apply"
+readme = "README.md"
+keywords = ["job-search", "cli", "agent", "ats"]
+categories = ["command-line-utilities"]
+
+[[bin]]
+name = "open-apply"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.6", default-features = false, features = ["std", "derive", "help", "usage", "error-context", "suggestions", "color", "wrap_help"] }
+rusqlite = { version = "0.37", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+serde_norway = "0.9"
+ureq = { version = "3.4", default-features = false, features = ["rustls", "gzip"] }
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"
+tempfile = "3"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
